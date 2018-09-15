@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
+import id.ac.undip.ce.student.muhammadrizqi.submission2.R.id.*
 import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private  var leagueId = "4328" //EPL
     private var fixture = 1
+    private var savedInstanceState: Bundle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,28 +18,35 @@ class MainActivity : AppCompatActivity() {
 
         nav_button.setOnNavigationItemSelectedListener {
                 item -> when(item.itemId){
-            R.id.navigation_prev -> {
+            navigation_prev -> {
                 fixture = 1
-                openFragment(MatchFragment.newInstance(fixture, leagueId))
+                openFragment(EventFragment.newInstance(fixture, leagueId))
                 return@setOnNavigationItemSelectedListener true
             }
-            R.id.navigation_next -> {
+            navigation_next -> {
                 fixture = 2
-                openFragment(MatchFragment.newInstance(fixture, leagueId))
+                openFragment(EventFragment.newInstance(fixture, leagueId))
                 return@setOnNavigationItemSelectedListener true
             }
+            navigation_favorite -> {
+                openFragment(FavoriteScheduleFragment())
+                return@setOnNavigationItemSelectedListener true
+
+            }
+
         }
             false
         }
-        openFragment(MatchFragment.newInstance(fixture,leagueId))
+        nav_button.selectedItemId = navigation_prev
     }
 
-    private fun openFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, fragment)
-                .addToBackStack(null)
-                .commit()
-
+    private fun openFragment(fragment: Fragment){
+        if(savedInstanceState == null){
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, fragment, fragment.javaClass.simpleName)
+                    .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,23 +56,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.menu1 -> {
+            menu1 -> {
                 leagueId = "4328"
             }
-            R.id.menu2 -> {
+            menu2 -> {
                 leagueId ="4331"
             }
-            R.id.menu3 -> {
+            menu3 -> {
                 leagueId="4332"
             }
-            R.id.menu4 -> {
+            menu4 -> {
                 leagueId="4334"
             }
-            R.id.menu5 -> {
+            menu5 -> {
                 leagueId = "4335"
             }
         }
-        openFragment(MatchFragment.newInstance(fixture, leagueId))
+        if (nav_button.selectedItemId == navigation_favorite) nav_button.selectedItemId = navigation_prev
+        else openFragment(EventFragment.newInstance(fixture, leagueId))
         return super.onOptionsItemSelected(item)
     }
 }

@@ -16,4 +16,6 @@
     <string name="midfield">Midfield</string>
     <string name="forward">Forward</string>
     <string name="subtitutes">Subtitutes</string>
+    <string name="favorite">Favorite</string>
+
 </resources>
