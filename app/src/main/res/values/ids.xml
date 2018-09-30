@@ -3,6 +3,7 @@
     <item name="date" type="id" />
     <item name="homeTeam" type="id" />
     <item name="vs" type="id" />
+    <item name="rv_event_list" type="id" />
     <item name="homeScore" type="id" />
     <item name="awayscore" type="id" />
     <item name="awayTeam" type="id" />

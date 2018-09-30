@@ -1,4 +1,4 @@
-package id.ac.undip.ce.student.muhammadrizqi.submission2
+package id.ac.undip.ce.student.muhammadrizqi.submission2.favorite
 
 import android.content.Context
 import android.os.Bundle
@@ -15,6 +15,12 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
+import id.ac.undip.ce.student.muhammadrizqi.submission2.R
+import id.ac.undip.ce.student.muhammadrizqi.submission2.db.Favorite
+import id.ac.undip.ce.student.muhammadrizqi.submission2.db.database
+import id.ac.undip.ce.student.muhammadrizqi.submission2.detail.EventDetailActivity
+import id.ac.undip.ce.student.muhammadrizqi.submission2.model.Event
+
 
 
 class FavoriteScheduleFragment: Fragment(), AnkoComponent<Context> {
@@ -27,7 +33,7 @@ class FavoriteScheduleFragment: Fragment(), AnkoComponent<Context> {
         super.onActivityCreated(savedInstanceState)
 
         adapter = FavoriteScheduleAdapter(favorites){
-            val event = MatchDetail(
+            val event = Event(
                     eventId = it.eventId,
                     eventDate = it.eventDate,
                     eventName = it.eventName,

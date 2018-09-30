@@ -1,4 +1,4 @@
-package id.ac.undip.ce.student.muhammadrizqi.submission2
+package id.ac.undip.ce.student.muhammadrizqi.submission2.util
 
 import android.annotation.SuppressLint
 import android.view.View
@@ -19,6 +19,7 @@ fun strToDate(strDate: String?, pattern: String = "yyyy-MM-dd"): Date{
 fun changeFormatDate(date: Date?): String? = with(date ?: Date()){
     SimpleDateFormat("EEE, dd MMM yyy").format(this)
 }
+
 fun View.visible(){
     visibility = View.VISIBLE
 }
