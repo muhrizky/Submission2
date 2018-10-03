@@ -1,9 +1,8 @@
-package id.ac.undip.ce.student.muhammadrizqi.submission2
+package id.ac.undip.ce.student.muhammadrizqi.submission2.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
-import java.awt.font.TextAttribute
 
 class MyDatabaseOpenHelper(ctx: Context): ManagedSQLiteOpenHelper(ctx, "FavoriteSchedule.db", null ) {
     override fun onCreate(db: SQLiteDatabase?) {
@@ -28,8 +27,8 @@ class MyDatabaseOpenHelper(ctx: Context): ManagedSQLiteOpenHelper(ctx, "Favorite
         private var instance: MyDatabaseOpenHelper? = null
 
         @Synchronized
-    fun getInstance(ctx: Context): MyDatabaseOpenHelper{
-            if (instance==null){
+    fun getInstance(ctx: Context): MyDatabaseOpenHelper {
+            if (instance ==null){
                 instance = MyDatabaseOpenHelper(ctx.applicationContext)
 
             }

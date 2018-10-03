@@ -1,4 +1,4 @@
-package id.ac.undip.ce.student.muhammadrizqi.submission2
+package id.ac.undip.ce.student.muhammadrizqi.submission2.event
 
 import android.content.Context
 import android.os.Bundle
@@ -15,21 +15,27 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
+import id.ac.undip.ce.student.muhammadrizqi.submission2.R
+import id.ac.undip.ce.student.muhammadrizqi.submission2.api.ApiRepository
+import id.ac.undip.ce.student.muhammadrizqi.submission2.detail.EventDetailActivity
+import id.ac.undip.ce.student.muhammadrizqi.submission2.model.Event
 
-class EventFragment: Fragment() {
-    private var match: MutableList<MatchDetail> = mutableListOf()
+
+class EventFragment: Fragment(), AnkoComponent<Context>, EventView{
+    private var events: MutableList<Event> = mutableListOf()
     private lateinit var presenter: EventPresenter
-    private lateinit var review: RecyclerView
-    private lateinit var swipe: SwipeRefreshLayout
+    private lateinit var eventList: RecyclerView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var adapter: EventAdapter
-    private var fixture= 1
-    private var leagueId = "4328"
+    private var fixture = 1
+    private var leagueId = "4328"   //EPL
 
     companion object {
-        fun newInstance(fixture: Int, leagueId: String): EventFragment {
+        fun newFragment(fixture: Int, leagueId: String): EventFragment {
             val fragment = EventFragment()
             fragment.fixture = fixture
             fragment.leagueId = leagueId
+
             return fragment
         }
     }
@@ -37,57 +43,57 @@ class EventFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val theSportDBApi = TheSportDBApi(leagueId)
-        val api = if(fixture ==1) theSportDBApi.getprevsechdule() else theSportDBApi.getnextsechdule()
+        val request = ApiRepository()
         val gson = Gson()
-        presenter = EventPresenter(this, api, gson)
-        adapter = EventAdapter(match){
+        presenter = EventPresenter(this, request, gson, fixture)
+
+        adapter = EventAdapter(events){
             ctx.startActivity<EventDetailActivity>("EVENT" to it)
         }
-        review.adapter = adapter
+        eventList.adapter = adapter
 
-        swipe.onRefresh {
-            presenter.getList()
+        swipeRefresh.onRefresh {
+            presenter.getList(leagueId)
         }
 
-        presenter.getList()
+        presenter.getList(leagueId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return createView(AnkoContext.create(ctx))
     }
 
-
-    fun showLoading() {
-        swipe.isRefreshing = true
+    override fun showLoading() {
+        swipeRefresh.isRefreshing = true
     }
 
-    fun hideLoading() {
-        swipe.isRefreshing = false
+    override fun hideLoading() {
+        swipeRefresh.isRefreshing = false
     }
 
-    fun showList(data: List<MatchDetail>) {
+    override fun showList(data: List<Event>) {
         hideLoading()
-        match.clear()
-        match.addAll(data)
+        events.clear()
+        events.addAll(data)
         adapter.notifyDataSetChanged()
     }
 
-    fun createView(ui: AnkoContext<Context>) = with(ui){
+    override fun createView(ui: AnkoContext<Context>) = with(ui){
         verticalLayout {
             lparams(width = matchParent, height = wrapContent)
             topPadding = dip(16)
             leftPadding = dip(16)
             rightPadding = dip(16)
 
-            swipe = swipeRefreshLayout {
+            swipeRefresh = swipeRefreshLayout {
                 setColorSchemeResources(R.color.colorAccent,
                         android.R.color.holo_green_light,
                         android.R.color.holo_orange_light,
                         android.R.color.holo_red_light
                 )
 
-                review = recyclerView {
+                eventList = recyclerView {
+                    id = R.id.rv_event_list
                     lparams(width = matchParent, height = wrapContent)
                     layoutManager = LinearLayoutManager(ctx)
                 }
